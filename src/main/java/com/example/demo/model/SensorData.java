@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Entity
@@ -24,6 +26,9 @@ public class SensorData {
     @NotNull
     private float light;
 
+    @NotNull
+    private String timestamp; // Thuộc tính thời gian dưới dạng chuỗi
+
     // Constructor không tham số
     public SensorData() {}
 
@@ -35,6 +40,14 @@ public class SensorData {
         this.temperature = temperature;
         this.humidity = humidity;
         this.light = light;
+        this.timestamp = generateCurrentTimestamp(); // Tự động thêm thời gian hiện tại
+    }
+
+    // Phương thức tạo chuỗi thời gian hiện tại theo định dạng yêu cầu
+    private String generateCurrentTimestamp() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss");
+        return now.format(formatter);
     }
 
     // Getters và Setters
@@ -46,6 +59,8 @@ public class SensorData {
     public void setHumidity(float humidity) { this.humidity = humidity; }
     public float getLight() { return light; }
     public void setLight(float light) { this.light = light; }
+    public String getTimestamp() { return timestamp; } // Getter cho timestamp
+    public void setTimestamp(String timestamp) { this.timestamp = timestamp; } // Setter cho timestamp
 
     // Override toString
     @Override
@@ -55,6 +70,7 @@ public class SensorData {
                 ", temperature=" + temperature +
                 ", humidity=" + humidity +
                 ", light=" + light +
+                ", timestamp='" + timestamp + '\'' + // Thêm timestamp vào toString
                 '}';
     }
 
@@ -67,13 +83,12 @@ public class SensorData {
         return Float.compare(that.temperature, temperature) == 0 &&
                 Float.compare(that.humidity, humidity) == 0 &&
                 Float.compare(that.light, light) == 0 &&
-                Objects.equals(id, that.id);
+                Objects.equals(id, that.id) &&
+                Objects.equals(timestamp, that.timestamp); // So sánh timestamp
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, temperature, humidity, light);
+        return Objects.hash(id, temperature, humidity, light, timestamp); // Thêm timestamp vào hashCode
     }
 }
-
-
