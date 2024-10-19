@@ -1,5 +1,7 @@
 package com.example.demo.mqtt;
 
+import com.example.demo.cache.ServerCache;
+import com.example.demo.model.LedState;
 import com.example.demo.model.SensorData;
 import com.example.demo.service.SensorDataService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +21,9 @@ public class MqttSubscriber implements MqttCallback {
     @Autowired
     private MqttClient mqttClient;
 
+    @Autowired
+    private ServerCache serverDataCache;
+
     @Override
     public void connectionLost(Throwable cause) {
         System.out.println("Connection lost: " + cause.getMessage());
@@ -27,9 +32,28 @@ public class MqttSubscriber implements MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         String payload = new String(message.getPayload());
-        if (topic.equals("home/sensors/data")) {
-            SensorData data = parseData(payload);
+        System.out.println("GiangPT" + topic);
+        System.out.println("GiangPT" + payload);
+        if (topic.equals("zang/sensors/data")) {
+            SensorData data = parseDataJson(payload);
+            serverDataCache.putSensorData(serverDataCache.idNewest, data);
             sensorDataService.saveData(data);
+        }
+        if (topic.equals("zang/sensors/data")) {
+
+        }
+    }
+
+    private void handleLedStatus(String payload) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            // Chuyển đổi JSON thành đối tượng LedState
+            LedState ledState = objectMapper.readValue(payload, LedState.class);
+            serverDataCache.putLedState(ServerCache.idLedState, ledState);
+            System.out.println("LED States updated: " + ledState);
+        } catch (Exception e) {
+            // Xử lý lỗi
+            System.err.println("Error parsing LED status: " + e.getMessage());
         }
     }
 
@@ -71,6 +95,7 @@ public class MqttSubscriber implements MqttCallback {
     @PostConstruct
     public void subscribe() throws Exception {
         mqttClient.setCallback(this);
-        mqttClient.subscribe("home/sensors/data");
+        mqttClient.subscribe("zang/sensors/data");
+        mqttClient.subscribe("zang/led/status");
     }
 }

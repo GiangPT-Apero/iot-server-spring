@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 
+import com.example.demo.cache.ServerCache;
 import com.example.demo.model.SensorData;
 import com.example.demo.repository.SensorDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,24 @@ public class SensorDataService {
     @Autowired
     private SensorDataRepository sensorDataRepository;
 
+    @Autowired
+    private ServerCache serverDataCache;
+
+    // Lấy dữ liệu từ cache
+    public SensorData getLatestSensorData() {
+        return serverDataCache.getSensorData(ServerCache.idNewest);
+    }
+
     public void saveData(SensorData data) {
         sensorDataRepository.save(data);
+    }
+
+    public Page<SensorData> getAllSensorData(int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size
+        );
+        return sensorDataRepository.findAll(pageable);
     }
 
     // Phương thức tìm kiếm theo nhiệt độ với phân trang

@@ -1,8 +1,8 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDateTime;
@@ -30,7 +30,8 @@ public class SensorData {
     private String timestamp; // Thuộc tính thời gian dưới dạng chuỗi
 
     // Constructor không tham số
-    public SensorData() {}
+    public SensorData() {
+    }
 
     // Constructor với tham số
     @JsonCreator
@@ -46,21 +47,51 @@ public class SensorData {
     // Phương thức tạo chuỗi thời gian hiện tại theo định dạng yêu cầu
     private String generateCurrentTimestamp() {
         LocalDateTime now = LocalDateTime.now();
+        System.out.println("GiangPT" + now);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss");
         return now.format(formatter);
     }
 
     // Getters và Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public float getTemperature() { return temperature; }
-    public void setTemperature(float temperature) { this.temperature = temperature; }
-    public float getHumidity() { return humidity; }
-    public void setHumidity(float humidity) { this.humidity = humidity; }
-    public float getLight() { return light; }
-    public void setLight(float light) { this.light = light; }
-    public String getTimestamp() { return timestamp; } // Getter cho timestamp
-    public void setTimestamp(String timestamp) { this.timestamp = timestamp; } // Setter cho timestamp
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public float getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(float temperature) {
+        this.temperature = temperature;
+    }
+
+    public float getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(float humidity) {
+        this.humidity = humidity;
+    }
+
+    public float getLight() {
+        return light;
+    }
+
+    public void setLight(float light) {
+        this.light = light;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    } // Getter cho timestamp
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    } // Setter cho timestamp
 
     // Override toString
     @Override

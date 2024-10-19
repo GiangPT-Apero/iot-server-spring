@@ -17,6 +17,10 @@ public class SensorDataController {
         this.sensorDataService = sensorDataService;
     }
 
+    @GetMapping("/newest")
+    public SensorData getLatestData() {
+        return sensorDataService.getLatestSensorData();
+    }
     // Tìm kiếm theo nhiệt độ với phân trang
     @GetMapping("/temperature/{temperature}")
     public Page<SensorData> getByTemperature(@PathVariable float temperature,
@@ -39,6 +43,12 @@ public class SensorDataController {
                                        @RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "10") int size) {
         return sensorDataService.findByLight(light, page, size);
+    }
+
+    @GetMapping("/all")
+    public Page<SensorData> getAllData(@RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "10") int size) {
+        return sensorDataService.getAllSensorData(page, size);
     }
 }
 
