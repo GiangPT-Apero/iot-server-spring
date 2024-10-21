@@ -24,6 +24,9 @@ public class LedData {
     @NotNull
     private String timeStamp;
 
+    public LedData() {
+    }
+
     public LedData(String ledName, String action) {
         this.ledName = ledName;
         this.action = action;

@@ -29,13 +29,15 @@ public class LedController {
     public ResponseEntity<String> toggleLed(@PathVariable String ledId, @RequestBody String command) {
         try {
             // Tạo MqttMessage từ chuỗi command
-            MqttMessage message = new MqttMessage(command.getBytes());
+            String test = command.replaceAll("\"", "");
+            MqttMessage message = new MqttMessage(test.getBytes());
             message.setQos(1); // Đặt QoS nếu cần
 
             // Xác định chủ đề dựa trên ledId
             String topic = "zang/commands/" + ledId;
 
-            ledDataService.saveData(new LedData(ledId, command));
+            ledDataService.saveData(new LedData(ledId, test));
+            System.out.println("GiangPT pub " + topic + ": " + test);
             mqttClient.publish(topic, message);
             return ResponseEntity.ok("Command sent to " + ledId + ": " + command);
         } catch (MqttException e) {

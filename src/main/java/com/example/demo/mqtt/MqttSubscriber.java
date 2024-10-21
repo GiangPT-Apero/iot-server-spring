@@ -32,15 +32,14 @@ public class MqttSubscriber implements MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         String payload = new String(message.getPayload());
-        System.out.println("GiangPT" + topic);
-        System.out.println("GiangPT" + payload);
+        System.out.println("GiangPT" + topic + ": " + payload);
         if (topic.equals("zang/sensors/data")) {
             SensorData data = parseDataJson(payload);
-            serverDataCache.putSensorData(serverDataCache.idNewest, data);
+            serverDataCache.putSensorData(ServerCache.idNewest, data);
             sensorDataService.saveData(data);
         }
-        if (topic.equals("zang/sensors/data")) {
-
+        if (topic.equals("zang/led/status")) {
+            handleLedStatus(payload);
         }
     }
 
