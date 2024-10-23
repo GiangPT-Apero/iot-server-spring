@@ -21,34 +21,43 @@ public class SensorDataController {
     public SensorData getLatestData() {
         return sensorDataService.getLatestSensorData();
     }
+
     // Tìm kiếm theo nhiệt độ với phân trang
     @GetMapping("/temperature/{temperature}")
     public Page<SensorData> getByTemperature(@PathVariable float temperature,
                                              @RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "10") int size) {
-        return sensorDataService.findByTemperature(temperature, page, size);
+                                             @RequestParam(defaultValue = "10") int size,
+                                             @RequestParam(defaultValue = "1") int sort) {
+        boolean isASC = sort == 1;
+        return sensorDataService.findByTemperature(temperature, page, size, isASC);
     }
 
     // Tìm kiếm theo độ ẩm với phân trang
     @GetMapping("/humidity/{humidity}")
     public Page<SensorData> getByHumidity(@PathVariable float humidity,
                                           @RequestParam(defaultValue = "0") int page,
-                                          @RequestParam(defaultValue = "10") int size) {
-        return sensorDataService.findByHumidity(humidity, page, size);
+                                          @RequestParam(defaultValue = "10") int size,
+                                          @RequestParam(defaultValue = "1") int sort) {
+        boolean isASC = sort == 1;
+        return sensorDataService.findByHumidity(humidity, page, size, isASC);
     }
 
     // Tìm kiếm theo ánh sáng với phân trang
     @GetMapping("/light/{light}")
     public Page<SensorData> getByLight(@PathVariable float light,
                                        @RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "10") int size) {
-        return sensorDataService.findByLight(light, page, size);
+                                       @RequestParam(defaultValue = "10") int size,
+                                       @RequestParam(defaultValue = "1") int sort) {
+        boolean isASC = sort == 1;
+        return sensorDataService.findByLight(light, page, size, isASC);
     }
 
     @GetMapping("/all")
     public Page<SensorData> getAllData(@RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "10") int size) {
-        return sensorDataService.getAllSensorData(page, size);
+                                       @RequestParam(defaultValue = "10") int size,
+                                       @RequestParam(defaultValue = "1") int sort) {
+        boolean isASC = sort == 1;
+        return sensorDataService.getAllSensorData(page, size, isASC);
     }
 }
 

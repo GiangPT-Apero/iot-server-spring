@@ -47,8 +47,29 @@ public class LedController {
 
     @GetMapping("/data")
     public Page<LedData> getAllData(@RequestParam(defaultValue = "0") int page,
-                                    @RequestParam(defaultValue = "10") int size) {
-        return ledDataService.getAllLedData(page, size);
+                                    @RequestParam(defaultValue = "10") int size,
+                                    @RequestParam(defaultValue = "1") int sort) {
+        boolean isASC = sort == 1;
+        return ledDataService.getAllLedData(page, size, isASC);
+    }
+
+    @GetMapping("/led/ledName/{ledName}")
+    public Page<LedData> searchByLedName(@PathVariable String ledName,
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "10") int size,
+                                         @RequestParam(defaultValue = "1") int sort) {
+        boolean isASC = sort == 1;
+        return ledDataService.searchByLedName(ledName, page, size, isASC);
+    }
+
+    // API tìm kiếm theo action
+    @GetMapping("/led/action/{action}")
+    public Page<LedData> searchByAction(@PathVariable String action,
+                                        @RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(defaultValue = "1") int sort) {
+        boolean isASC = sort == 1;
+        return ledDataService.searchByAction(action, page, size, isASC);
     }
 
     @GetMapping("/state")

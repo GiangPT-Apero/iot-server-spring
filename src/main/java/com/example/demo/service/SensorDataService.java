@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -30,37 +31,49 @@ public class SensorDataService {
         sensorDataRepository.save(data);
     }
 
-    public Page<SensorData> getAllSensorData(int page, int size) {
+    private Sort getSortType(boolean isASC) {
+        if (isASC) {
+            return Sort.by(Sort.Direction.fromString("ASC"), "id");
+        } else {
+            return Sort.by(Sort.Direction.fromString("DESC"), "id");
+        }
+    }
+
+    public Page<SensorData> getAllSensorData(int page, int size, boolean isASC) {
         Pageable pageable = PageRequest.of(
                 page,
-                size
+                size,
+                getSortType(isASC)
         );
         return sensorDataRepository.findAll(pageable);
     }
 
     // Phương thức tìm kiếm theo nhiệt độ với phân trang
-    public Page<SensorData> findByTemperature(float temperature, int page, int size) {
+    public Page<SensorData> findByTemperature(float temperature, int page, int size, boolean isASC) {
         Pageable pageable = PageRequest.of(
                 page,
-                size
+                size,
+                getSortType(isASC)
         );
         return sensorDataRepository.findByTemperature(temperature, pageable);
     }
 
     // Phương thức tìm kiếm theo độ ẩm với phân trang
-    public Page<SensorData> findByHumidity(float humidity, int page, int size) {
+    public Page<SensorData> findByHumidity(float humidity, int page, int size, boolean isASC) {
         Pageable pageable = PageRequest.of(
                 page,
-                size
+                size,
+                getSortType(isASC)
         );
         return sensorDataRepository.findByHumidity(humidity, pageable);
     }
 
     // Phương thức tìm kiếm theo ánh sáng với phân trang
-    public Page<SensorData> findByLight(float light, int page, int size) {
+    public Page<SensorData> findByLight(float light, int page, int size, boolean isASC) {
         Pageable pageable = PageRequest.of(
                 page,
-                size
+                size,
+                getSortType(isASC)
         );
         return sensorDataRepository.findByLight(light, pageable);
     }
