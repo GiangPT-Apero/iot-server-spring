@@ -27,23 +27,29 @@ public class SensorDataService {
         return serverDataCache.getSensorData(ServerCache.idNewest);
     }
 
+
+
     public void saveData(SensorData data) {
         sensorDataRepository.save(data);
     }
 
-    private Sort getSortType(boolean isASC) {
+    private Sort getSortType(boolean isASC, String params) {
         if (isASC) {
-            return Sort.by(Sort.Direction.fromString("ASC"), "id");
+            return Sort.by(Sort.Direction.fromString("ASC"), params);
         } else {
-            return Sort.by(Sort.Direction.fromString("DESC"), "id");
+            return Sort.by(Sort.Direction.fromString("DESC"), params);
         }
     }
 
-    public Page<SensorData> getAllSensorData(int page, int size, boolean isASC) {
+    private Sort getSortType(boolean isASC) {
+        return getSortType(isASC, "id");
+    }
+
+    public Page<SensorData> getAllSensorData(int page, int size, boolean isASC, String params) {
         Pageable pageable = PageRequest.of(
                 page,
                 size,
-                getSortType(isASC)
+                getSortType(isASC, params)
         );
         return sensorDataRepository.findAll(pageable);
     }
@@ -76,6 +82,15 @@ public class SensorDataService {
                 getSortType(isASC)
         );
         return sensorDataRepository.findByLight(light, pageable);
+    }
+
+    public Page<SensorData> findByTimestampContaining(String timePart, int page, int size, boolean isASC) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                getSortType(isASC)
+        );
+        return sensorDataRepository.findByTimestampContaining(timePart, pageable);
     }
 
     // Lấy dữ liệu theo ID

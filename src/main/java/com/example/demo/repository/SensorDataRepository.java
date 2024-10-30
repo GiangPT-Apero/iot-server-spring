@@ -18,6 +18,9 @@ public interface SensorDataRepository extends JpaRepository<SensorData, Long>, P
 
     // Tìm kiếm theo ánh sáng
     Page<SensorData> findByLight(float light, Pageable pageable);
+
+    // Tìm tất cả các bản ghi có timestamp chứa chuỗi cần tìm
+    Page<SensorData> findByTimestampContaining(String timestampPart, Pageable pageable);
 }
 
 

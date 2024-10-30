@@ -52,12 +52,23 @@ public class SensorDataController {
         return sensorDataService.findByLight(light, page, size, isASC);
     }
 
+    @GetMapping("/time")
+    public Page<SensorData> getByTimestamp(@RequestParam(defaultValue = "") String timestamp,
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "10") int size,
+                                           @RequestParam(defaultValue = "1") int sort) {
+        boolean isASC = sort == 1;
+        System.out.println("GiangPT sensor" + timestamp);
+        return sensorDataService.findByTimestampContaining(timestamp, page, size, isASC);
+    }
+
     @GetMapping("/all")
     public Page<SensorData> getAllData(@RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "10") int size,
-                                       @RequestParam(defaultValue = "1") int sort) {
+                                       @RequestParam(defaultValue = "1") int sort,
+                                       @RequestParam(defaultValue = "id") String params) {
         boolean isASC = sort == 1;
-        return sensorDataService.getAllSensorData(page, size, isASC);
+        return sensorDataService.getAllSensorData(page, size, isASC, params);
     }
 }
 

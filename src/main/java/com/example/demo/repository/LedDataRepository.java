@@ -14,4 +14,7 @@ public interface LedDataRepository extends JpaRepository<LedData, Long>, PagingA
 
     // Tìm kiếm theo action
     Page<LedData> findByAction(String action, Pageable pageable);
+
+    // Tìm kiếm theo chuỗi trong timeStamp
+    Page<LedData> findByTimeStampContaining(String timeStampPart, Pageable pageable);
 }

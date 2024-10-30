@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.cache.ServerCache;
 import com.example.demo.model.LedData;
 import com.example.demo.model.LedState;
+import com.example.demo.model.SensorData;
 import com.example.demo.repository.LedDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,23 +25,27 @@ public class LedDataService {
         return serverDataCache.getLedState(ServerCache.idLedState);
     }
 
-    private Sort getSortType(boolean isASC) {
+    private Sort getSortType(boolean isASC, String params) {
         if (isASC) {
-            return Sort.by(Sort.Direction.fromString("ASC"), "id");
+            return Sort.by(Sort.Direction.fromString("ASC"), params);
         } else {
-            return Sort.by(Sort.Direction.fromString("DESC"), "id");
+            return Sort.by(Sort.Direction.fromString("DESC"), params);
         }
+    }
+
+    private Sort getSortType(boolean isASC) {
+        return getSortType(isASC, "id");
     }
 
     public void saveData(LedData ledData) {
         ledDataRepository.save(ledData);
     }
 
-    public Page<LedData> getAllLedData(int page, int size, boolean isASC) {
+    public Page<LedData> getAllLedData(int page, int size, boolean isASC, String params) {
         Pageable pageable = PageRequest.of(
                 page,
                 size,
-                getSortType(isASC)
+                getSortType(isASC, params)
         );
         return ledDataRepository.findAll(pageable);
     }
@@ -63,5 +68,14 @@ public class LedDataService {
                 getSortType(isASC)
         );
         return ledDataRepository.findByAction(action, pageable);
+    }
+
+    public Page<LedData> findByTimestampContaining(String timePart, int page, int size, boolean isASC) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                getSortType(isASC)
+        );
+        return ledDataRepository.findByTimeStampContaining(timePart, pageable);
     }
 }

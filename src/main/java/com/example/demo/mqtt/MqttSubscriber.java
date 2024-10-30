@@ -1,9 +1,13 @@
 package com.example.demo.mqtt;
 
 import com.example.demo.cache.ServerCache;
+import com.example.demo.controller.LedController;
 import com.example.demo.model.LedState;
+import com.example.demo.model.RandomData;
 import com.example.demo.model.SensorData;
 import com.example.demo.service.SensorDataService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -20,6 +24,9 @@ public class MqttSubscriber implements MqttCallback {
 
     @Autowired
     private MqttClient mqttClient;
+
+    @Autowired
+    private LedController ledController;
 
     @Autowired
     private ServerCache serverDataCache;
@@ -40,6 +47,12 @@ public class MqttSubscriber implements MqttCallback {
         }
         if (topic.equals("zang/led/status")) {
             handleLedStatus(payload);
+        }
+        if (topic.equals("zang/sensor/random")) {
+            RandomData random = parseRandomData(payload);
+            if (random != null && random.getValue() > 80) {
+                ledController.blinkLed(true);
+            }
         }
     }
 
@@ -91,10 +104,20 @@ public class MqttSubscriber implements MqttCallback {
         }
     }
 
+    private RandomData parseRandomData(String payload) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(payload, RandomData.class);
+        }  catch (Exception e) {
+            // Xử lý lỗi
+            return null;
+        }
+    }
     @PostConstruct
     public void subscribe() throws Exception {
         mqttClient.setCallback(this);
         mqttClient.subscribe("zang/sensors/data");
         mqttClient.subscribe("zang/led/status");
+        mqttClient.subscribe("zang/sensor/rando");
     }
 }
