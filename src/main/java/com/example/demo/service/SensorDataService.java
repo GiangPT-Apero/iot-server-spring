@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 
 import com.example.demo.cache.ServerCache;
+import com.example.demo.model.RandomData;
 import com.example.demo.model.SensorData;
 import com.example.demo.repository.SensorDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,9 @@ public class SensorDataService {
         return serverDataCache.getSensorData(ServerCache.idNewest);
     }
 
-
+    public RandomData getLatestRandomData() {
+        return serverDataCache.getRandomData();
+    }
 
     public void saveData(SensorData data) {
         sensorDataRepository.save(data);

@@ -53,6 +53,7 @@ public class MqttSubscriber implements MqttCallback {
             if (random != null && random.getValue() > 80) {
                 ledController.blinkLed(true);
             }
+            serverDataCache.putRandomData(random);
         }
     }
 
@@ -118,6 +119,6 @@ public class MqttSubscriber implements MqttCallback {
         mqttClient.setCallback(this);
         mqttClient.subscribe("zang/sensors/data");
         mqttClient.subscribe("zang/led/status");
-        mqttClient.subscribe("zang/sensor/rando");
+        mqttClient.subscribe("zang/sensor/random");
     }
 }

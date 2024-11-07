@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.RandomData;
 import com.example.demo.model.SensorData;
 import com.example.demo.service.SensorDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ public class SensorDataController {
     @GetMapping("/newest")
     public SensorData getLatestData() {
         return sensorDataService.getLatestSensorData();
+    }
+
+    @GetMapping("/random/newest")
+    public RandomData getLatestRandomData() {
+        return sensorDataService.getLatestRandomData();
     }
 
     // Tìm kiếm theo nhiệt độ với phân trang
